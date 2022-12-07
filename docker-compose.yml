@@ -72,7 +72,7 @@ services:
       cassandra-003:
         condition: service_healthy
 
-  kafka:
+  kafka-001:
     image: bitnami/kafka:latest
     container_name: kafka-001
     hostname: kafka-001
@@ -89,10 +89,10 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
 
-  grafana:
+  grafana-001:
     image: grafana/grafana-oss:latest
-    container_name: grafana
-    hostname: grafana
+    container_name: grafana-001
+    hostname: grafana-001
     ports:
       - "3000:3000"
     volumes:
@@ -101,6 +101,9 @@ services:
         target: /var/lib/grafana
     networks:
       - cassandra_cluster
+    depends_on:
+      cassandra-004:
+        condition: service_healthy
 
   app-001:
     container_name: app-001
@@ -115,6 +118,9 @@ services:
       RUN_CLIENT_RANDOM_DATA: true
       KAFKA_HOST: kafka-001
       CASSANDRA_HOST: "[cassandra-001,cassandra-002,cassandra-003,cassandra-004]"
+    depends_on:
+      - grafana-001
+      - kafka-001
 
   app-002:
     container_name: app-002
@@ -124,6 +130,9 @@ services:
       - kafka_cluster
       - cassandra_cluster
     environment: *app_environment
+    depends_on:
+      - grafana-001
+      - kafka-001
 
   app-003:
     container_name: app-002
@@ -133,6 +142,9 @@ services:
       - kafka_cluster
       - cassandra_cluster
     environment: *app_environment
+    depends_on:
+      - grafana-001
+      - kafka-001
 
   app-004:
     container_name: app-002
@@ -142,6 +154,9 @@ services:
       - kafka_cluster
       - cassandra_cluster
     environment: *app_environment
+    depends_on:
+      - grafana-001
+      - kafka-001
 
   app-005:
     container_name: app-002
@@ -151,6 +166,9 @@ services:
       - kafka_cluster
       - cassandra_cluster
     environment: *app_environment
+    depends_on:
+      - grafana-001
+      - kafka-001
 
   app-006:
     container_name: app-002
@@ -160,3 +178,6 @@ services:
       - kafka_cluster
       - cassandra_cluster
     environment: *app_environment
+    depends_on:
+      - grafana-001
+      - kafka-001
