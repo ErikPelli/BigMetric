@@ -27,3 +27,6 @@ Spring microservices, or even a serverless solution, if it's cheaper, in that wa
 when there are data to process.
 Also, instead of a Cassandra cluster we can opt for something similar, such as Google BigTable
 or Amazon DynamoDB, and Google Cloud Pub/Sub can replace Apache Kafka.
+
+## Build
+./gradlew build
