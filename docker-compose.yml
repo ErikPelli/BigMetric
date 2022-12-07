@@ -2,6 +2,7 @@ version: "3.8"
 
 networks:
   cassandra_cluster: {}
+  kafka_cluster: {}
 
 services:
   cassandra-001:
@@ -15,9 +16,7 @@ services:
       retries: 60
     networks:
       - cassandra_cluster
-    ports:
-      - "9042:9042"  # CQL port for apps
-    environment: &environment    # Save env variables into "environment"
+    environment: &cassandra_environment    # Save env variables into "environment"
       CASSANDRA_SEEDS: "cassandra-001,cassandra-002"    # The first two nodes will be seeds
       CASSANDRA_CLUSTER_NAME: DataCluster
       CASSANDRA_DC: Local
@@ -36,9 +35,7 @@ services:
       retries: 60
     networks:
       - cassandra_cluster
-    ports:
-      - "9043:9042"  # CQL port for apps
-    environment: *environment
+    environment: *cassandra_environment
     depends_on:
       cassandra-001:
         condition: service_healthy
@@ -54,9 +51,7 @@ services:
       retries: 60
     networks:
       - cassandra_cluster
-    ports:
-      - "9044:9042"  # CQL port for apps
-    environment: *environment
+    environment: *cassandra_environment
     depends_on:
       cassandra-002:
         condition: service_healthy
@@ -72,9 +67,24 @@ services:
       retries: 60
     networks:
       - cassandra_cluster
-    ports:
-      - "9045:9042"  # CQL port for apps
-    environment: *environment
+    environment: *cassandra_environment
     depends_on:
       cassandra-003:
         condition: service_healthy
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka-001
+    hostname: kafka-001
+    networks:
+      - kafka_cluster
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
+      - ALLOW_PLAINTEXT_LISTENER=yes
