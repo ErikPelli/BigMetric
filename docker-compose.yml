@@ -101,3 +101,62 @@ services:
         target: /var/lib/grafana
     networks:
       - cassandra_cluster
+
+  app-001:
+    container_name: app-001
+    hostname: app-001
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: &app_environment
+      TEMP_MIN_BOUND: 0
+      TEMP_MAX_BOUND: 100
+      RUN_CLIENT_RANDOM_DATA: true
+      KAFKA_HOST: kafka-001
+      CASSANDRA_HOST: "[cassandra-001,cassandra-002,cassandra-003,cassandra-004]"
+
+  app-002:
+    container_name: app-002
+    hostname: app-002
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: *app_environment
+
+  app-003:
+    container_name: app-002
+    hostname: app-002
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: *app_environment
+
+  app-004:
+    container_name: app-002
+    hostname: app-002
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: *app_environment
+
+  app-005:
+    container_name: app-002
+    hostname: app-002
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: *app_environment
+
+  app-006:
+    container_name: app-002
+    hostname: app-002
+    build: .
+    networks:
+      - kafka_cluster
+      - cassandra_cluster
+    environment: *app_environment
