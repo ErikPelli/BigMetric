@@ -28,5 +28,24 @@ when there are data to process.
 Also, instead of a Cassandra cluster we can opt for something similar, such as Google BigTable
 or Amazon DynamoDB, and Google Cloud Pub/Sub can replace Apache Kafka.
 
-## Build
+## Build & Run
+Build the Java (Spring Boot) microservice using Gradle:
+```
 ./gradlew build
+```
+
+Make sure no other copies of the app are running (`docker ps` and `docker rm -f <ids>`).
+
+Start the application stack:
+```
+docker compose up
+```
+
+## Data Visualization
+Grafana was chosen to display some graph on changes in sensor data over time.
+The tool takes data directly from the Cassandra cluster using some CQL (Cassandra Query Language)
+queries written for this project, over the time frame considered.
+
+To access Grafana UI:
+- Port 3000 in the browser (localhost:3000)
+- Username & password: admin admin
