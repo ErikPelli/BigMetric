@@ -28,6 +28,40 @@ when there are data to process.
 Also, instead of a Cassandra cluster we can opt for something similar, such as Google BigTable
 or Amazon DynamoDB, and Google Cloud Pub/Sub can replace Apache Kafka.
 
+## Design choices
+### Database
+The data that needs to be saved in the database is basically time series data, and therefore it is necessary
+to handle such data in our application.
+In addition, as per the initial specifications, the application must be scalable and handle up to 1 million
+sensors simultaneously.
+
+Therefore, Apache Cassandra seems to be a good compromise between the two, if the cluster capacity is saturated,
+just add another node and the performance increases ([Here](https://docs.datastax.com/en/tutorials/Time_Series.pdf)
+is a good guide to design a time series DB).
+
+### Data Processing
+There is a need for middleware that handles the data collected from the sensors, filters it, processes it
+by converting it to a compatible format, and saves it to the database.
+It was decided to adopt a filter on temperature values in °C, which can be set in the environment variables
+and allows discarding outliers that are likely to come from an incorrect reading.
+It was decided to take an approach where there are multiple deployments of a microservice written in
+Java Spring (but other languages/frameworks are fine as well) and the data is split between instances to
+increase throughput.
+
+### Data Transfer
+There could be several ways to transfer data from the various sensors to the service responsible for processing
+them, including RPC, a REST API, or a message queue.
+In this case we can use Apache Kafka as a message queue, and it looks good because it is asynchronous and allows
+handling large amounts of data, with the possibility of adding more nodes to increase the capability.
+
+An alternative would be to use a load balancer with a REST API to connect the sensor with the microservice that
+processes the data, but this would be more complex to manage in the long run and does not scale as well as in a
+message queue, which allows the data producer to be separated from the consumer.
+
+To compensate for the time between the sensor sending the data and when it is saved by the processing service,
+it is convenient to include the timestamp directly in the message sent in the queue, so you can accurately track
+when the temperature was actually collected.
+
 ## Build & Run
 Build the Java (Spring Boot) microservice using Gradle:
 ```
@@ -47,5 +81,5 @@ The tool takes data directly from the Cassandra cluster using some CQL (Cassandr
 queries written for this project, over the time frame considered.
 
 To access Grafana UI:
-- Port 3000 in the browser (localhost:3000)
-- Username & password: admin admin
+- Port 3000 in the browser (`localhost:3000`)
+- Username & password: `admin` `admin`
