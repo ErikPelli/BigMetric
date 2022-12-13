@@ -6,7 +6,7 @@ plugins {
 
 group = 'me.erikpelli'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '19'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
@@ -17,6 +17,12 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+    // JUnit
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 }
 
 tasks.named('test') {
