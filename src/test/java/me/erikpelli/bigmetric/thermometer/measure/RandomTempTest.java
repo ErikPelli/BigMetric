@@ -1,6 +1,5 @@
 package me.erikpelli.bigmetric.thermometer.measure;
 
-import me.erikpelli.bigmetric.thermometer.measure.RandomTemp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -47,5 +46,10 @@ class RandomTempTest {
         assertDoesNotThrow(() -> {
             generator.getTemperature();
         });
+        var generatorBound = new RandomTemp(0, 10);
+        for(var i = 0; i < 1000; i++) {
+            var result = generatorBound.getTemperature();
+            assertTrue(result >= 0 && result < 10, "Temperature out of range");
+        }
     }
 }
