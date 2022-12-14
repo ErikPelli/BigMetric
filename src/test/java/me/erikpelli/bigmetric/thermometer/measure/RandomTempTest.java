@@ -2,11 +2,17 @@ package me.erikpelli.bigmetric.thermometer.measure;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class RandomTempTest {
     RandomTemp generator;
+
+    @Value("${client.test.temperature-checks}")
+    private int cycleIterations;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +53,7 @@ class RandomTempTest {
             generator.getTemperature();
         });
         var generatorBound = new RandomTemp(0, 10);
-        for(var i = 0; i < 1000; i++) {
+        for(var i = 0; i < cycleIterations; i++) {
             var result = generatorBound.getTemperature();
             assertTrue(result >= 0 && result < 10, "Temperature out of range");
         }
