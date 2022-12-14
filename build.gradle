@@ -13,6 +13,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.0'
+    implementation 'org.springframework.boot:spring-boot:3.0.0'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
     implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
