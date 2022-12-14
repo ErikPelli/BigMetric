@@ -1,6 +1,6 @@
 package me.erikpelli.bigmetric.thermometer.measure;
 
-import me.erikpelli.bigmetric.thermometer.TemperatureGetter;
+import me.erikpelli.bigmetric.thermometer.components.TemperatureGetter;
 
 /**
  * TemperatureGenerator represents a collected temperature that doesn't
@@ -9,7 +9,7 @@ import me.erikpelli.bigmetric.thermometer.TemperatureGetter;
  * for superior layers if in the future we decide to collect the temperature
  * in other ways.
  */
-public abstract class TemperatureGenerator implements TemperatureGetter {
+abstract class TemperatureGenerator implements TemperatureGetter {
     public abstract double getTemperature();
 
     @Override
