@@ -53,7 +53,7 @@ class RandomTempTest {
             generator.getTemperature();
         });
         var generatorBound = new RandomTemp(0, 10);
-        for(var i = 0; i < cycleIterations; i++) {
+        for (var i = 0; i < cycleIterations; i++) {
             var result = generatorBound.getTemperature();
             assertTrue(result >= 0 && result < 10, "Temperature out of range");
         }

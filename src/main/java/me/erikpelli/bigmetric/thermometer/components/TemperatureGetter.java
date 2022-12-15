@@ -6,6 +6,7 @@ package me.erikpelli.bigmetric.thermometer.components;
 public interface TemperatureGetter {
     /**
      * Return the actual double value for the temperature.
+     *
      * @return temperature in degrees.
      */
     double getTemperature();
