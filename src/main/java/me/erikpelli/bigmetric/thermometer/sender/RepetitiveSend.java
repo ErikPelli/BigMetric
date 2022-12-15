@@ -2,6 +2,7 @@ package me.erikpelli.bigmetric.thermometer.sender;
 
 import me.erikpelli.bigmetric.thermometer.components.ReadCelsiusTemperature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -9,8 +10,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@EnableScheduling
 @EnableAsync
+@EnableScheduling
+@ConditionalOnProperty(prefix = "client.producer", name="enabled", havingValue="true", matchIfMissing = true)
 class RepetitiveSend {
     private final SensorInitializer sensors;
     private final ReadCelsiusTemperature temperatureReader;

@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.Duration;
 
-@SpringBootTest
+@SpringBootTest(properties = {"client.producer.enabled=true"})
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class RepetitiveSendTest {
@@ -23,7 +23,26 @@ class RepetitiveSendTest {
                 .atMost(Duration.ofSeconds(15))
                 .untilAsserted(() -> Mockito.verify(
                         repetitiveSend,
-                        Mockito.times(1)).sendingService()
+                        Mockito.times(2)).sendingService()
+                );
+    }
+}
+
+@SpringBootTest(properties = {"client.producer.enabled=false"})
+@DirtiesContext
+@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+class DisabledRepetitiveSendTest {
+    @SpyBean
+    private RepetitiveSend repetitiveSend;
+
+    @Test
+    void sendingService() {
+        Awaitility.await()
+                .during(Duration.ofSeconds(15))
+                .atMost(Duration.ofSeconds(20))
+                .untilAsserted(() -> Mockito.verify(
+                        repetitiveSend,
+                        Mockito.never()).sendingService()
                 );
     }
 }
