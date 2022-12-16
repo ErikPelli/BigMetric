@@ -3,11 +3,14 @@ package me.erikpelli.bigmetric.thermometer.sender;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(properties = {"cassandra.test.enabled=false"})
+@EnableAutoConfiguration(exclude = {CassandraAutoConfiguration.class})
 class SensorInitializerTest {
     @Autowired
     private SensorInitializer sensorInitializer;
