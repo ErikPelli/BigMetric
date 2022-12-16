@@ -10,7 +10,7 @@ import java.time.Instant;
  * @param temperature floating point value of the measured temperature
  * @param createdAt   ISO8601 date that represents the moment when the measure has been done
  */
-record KafkaData(int version, int deviceId, double temperature, String createdAt) {
+public record KafkaData(int version, int deviceId, double temperature, String createdAt) {
     final static int dataVersion = 1;
 
     KafkaData(int deviceId, double temperature, String createdAt) {

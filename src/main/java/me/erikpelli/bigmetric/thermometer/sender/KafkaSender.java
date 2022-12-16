@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-class KafkaSender {
+public class KafkaSender {
     private final KafkaTemplate<String, KafkaData> kafkaTemplate;
     private final String temperatureTopic;
 
@@ -31,7 +31,7 @@ class KafkaSender {
      *
      * @param data temperature data to send
      */
-    void sendTemperature(KafkaData data) {
+    public void sendTemperature(KafkaData data) {
         sendMessage(this.temperatureTopic, data);
     }
 }
