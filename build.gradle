@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'me.erikpelli'
-version = '0.0.1-SNAPSHOT'
+version = '0.5.0'
 sourceCompatibility = '17'
 
 repositories {
@@ -15,18 +15,23 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-cassandra'
+    implementation 'com.datastax.oss:java-driver-core'
     implementation 'org.springframework.kafka:spring-kafka'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
     testImplementation 'org.awaitility:awaitility'
 
     // JUnit
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+    testImplementation(platform('org.junit:junit-bom:5.9.1'))
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
+    testRuntimeOnly('org.junit.vintage:junit-vintage-engine')
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(Test).configureEach {
+    forkEvery = 1
 }
