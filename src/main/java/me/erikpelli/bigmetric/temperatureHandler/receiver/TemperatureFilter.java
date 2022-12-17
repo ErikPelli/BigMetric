@@ -31,6 +31,7 @@ class TemperatureFilter {
 
     /**
      * Return true if the temperature is in the valid range.
+     *
      * @param temperature temperature to check
      * @return boolean validity
      */
@@ -40,9 +41,10 @@ class TemperatureFilter {
 
     /**
      * Save the received temperature data inside the Cassandra DB.
-     * @param deviceId identifier of the sensor
+     *
+     * @param deviceId    identifier of the sensor
      * @param temperature measured value of the temperature
-     * @param createdAt instant when the value has been measured (UTC)
+     * @param createdAt   instant when the value has been measured (UTC)
      */
     protected void saveTemperature(int deviceId, double temperature, Instant createdAt) {
         if (!isTemperatureInRange(temperature)) {

@@ -15,6 +15,11 @@ public class KafkaReceiver {
         this.dataExtract = dataExtract;
     }
 
+    /**
+     * Handle the received value from Kafka and save it.
+     *
+     * @param temperatureData Value saved in KafkaData object
+     */
     @KafkaListener(topics = "${kafka.topicName}", groupId = "${spring.kafka.consumer.group-id}")
     public void temperatureListener(KafkaData temperatureData) {
         latest = temperatureData;
@@ -27,6 +32,7 @@ public class KafkaReceiver {
 
     /**
      * Get latest received data from the temperature topic.
+     *
      * @return received data
      */
     public KafkaData getLatest() {

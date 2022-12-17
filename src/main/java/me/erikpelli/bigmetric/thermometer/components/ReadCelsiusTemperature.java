@@ -31,7 +31,7 @@ public class ReadCelsiusTemperature {
     /**
      * Return the actual temperature when needed.
      *
-     * @return celsius degrees temperatures as a double value.
+     * @return Celsius degrees temperatures as double value
      */
     public double actualTemperature() {
         return currentTempGetter.getTemperature();
