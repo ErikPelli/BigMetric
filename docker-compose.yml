@@ -177,6 +177,8 @@ services:
         target: /var/lib/grafana
     networks:
       - cassandra_cluster
+    environment:
+      GF_INSTALL_PLUGINS: hadesarchitect-cassandra-datasource
     depends_on:
       - app-001
       - app-002
