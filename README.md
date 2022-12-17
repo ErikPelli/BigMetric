@@ -1,5 +1,7 @@
 # BigMetric
 
+![Dashboard](/../images/dashboard.jpg?raw=true "Dashboard")
+
 ## Introduction
 BigMetric is a Proof of Concept to test a scalable network of temperature sensors located worldwide.
 Theoretically, if implemented correctly, it should be able to handle up to 1 million devices,
@@ -81,5 +83,5 @@ The tool takes data directly from the Cassandra cluster using some CQL (Cassandr
 queries written for this project, over the time frame considered.
 
 To access Grafana UI:
-- Port 3000 in the browser (`localhost:3000`)
+- Port 3001 in the browser (`localhost:3001`)
 - Username & password: `admin` `admin`
