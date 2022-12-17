@@ -7,16 +7,16 @@ import org.springframework.data.cassandra.core.mapping.Table;
 /**
  * Temperature Cassandra Table used to save temperatures in Cassandra DB.
  * Table Fields:
- * - sensorId (bigint)
- * - measureTime (timestamp)
- * - value (double)
+ * - sensor_id (bigint)
+ * - measure_time (timestamp)
+ * - temperature_value (double)
  */
 @Table
 public class Temperature {
     @PrimaryKey
     private TemperatureKey idAndTime;
 
-    @Column(value = "temperatureValue")
+    @Column(value = "temperature_value")
     private double value;
 
     public TemperatureKey getCompositePrimaryKey() {

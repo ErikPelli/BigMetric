@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /**
  * Primary key for the Temperature Cassandra table.
- * CQL equivalent: PRIMARY KEY((sensorId), measureTime)
+ * CQL equivalent: PRIMARY KEY((sensor_id), measure_time)
  * The partition is determined from the sensor id and the data
  * are saved in descending order (most recent first) using the
  * measureTime.
@@ -19,14 +19,14 @@ import java.util.Objects;
 @PrimaryKeyClass
 public class TemperatureKey implements Serializable {
     @PrimaryKeyColumn(
-            name = "sensorId",
+            name = "sensor_id",
             ordinal = 0,
             type = PrimaryKeyType.PARTITIONED
     )
     private long sensorId;
 
     @PrimaryKeyColumn(
-            name = "measureTime",
+            name = "measure_time",
             ordinal = 1,
             type = PrimaryKeyType.CLUSTERED,
             ordering = Ordering.DESCENDING
