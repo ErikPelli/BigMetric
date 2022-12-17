@@ -56,21 +56,15 @@ services:
       cassandra-002:
         condition: service_healthy
 
-  cassandra-004:
+  cassandra-setup:
     image: cassandra:4.1
-    container_name: cassandra-004
-    hostname: cassandra-004
-    healthcheck:
-      test: [ "CMD", "cqlsh", "-e", "describe keyspaces" ]
-      interval: 5s
-      timeout: 5s
-      retries: 60
+    depends_on:
+      cassandra-002:
+        condition: service_healthy
     networks:
       - cassandra_cluster
-    environment: *cassandra_environment
-    depends_on:
-      cassandra-003:
-        condition: service_healthy
+    restart: "no"
+    entrypoint: [ "cqlsh", "-e", "CREATE KEYSPACE temperature_storage WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 2};", "cassandra-002" ]
 
   kafka-001:
     image: bitnami/kafka:latest
@@ -84,25 +78,12 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-001:9092
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:9093
       - ALLOW_PLAINTEXT_LISTENER=yes
-
-  grafana-001:
-    image: grafana/grafana-oss:latest
-    container_name: grafana-001
-    hostname: grafana-001
-    ports:
-      - "3000:3000"
-    volumes:
-      - type: bind
-        source: ./grafana
-        target: /var/lib/grafana
-    networks:
-      - cassandra_cluster
     depends_on:
-      cassandra-004:
+      cassandra-003:
         condition: service_healthy
 
   app-001:
@@ -114,12 +95,12 @@ services:
       - cassandra_cluster
     environment:
       KAFKA_HOST: kafka-001:9092
-      CASSANDRA_HOST: "[cassandra-001,cassandra-002]"
+      CASSANDRA_HOST: cassandra-001,cassandra-002
       SENSOR_FIRST_ID: 1
       SENSOR_NUM: 1000
     depends_on:
-      - grafana-001
       - kafka-001
+      - cassandra-setup
 
   app-002:
     container_name: app-002
@@ -130,12 +111,12 @@ services:
       - cassandra_cluster
     environment:
       KAFKA_HOST: kafka-001:9092
-      CASSANDRA_HOST: "[cassandra-002,cassandra-003]"
+      CASSANDRA_HOST: cassandra-002,cassandra-003
       SENSOR_FIRST_ID: 1001
       SENSOR_NUM: 1000
     depends_on:
-      - grafana-001
       - kafka-001
+      - cassandra-setup
 
   app-003:
     container_name: app-003
@@ -146,11 +127,10 @@ services:
       - cassandra_cluster
     environment:
       KAFKA_HOST: kafka-001:9092
-      CASSANDRA_HOST: "[cassandra-003,cassandra-004]"
+      CASSANDRA_HOST: cassandra-001,cassandra-003
       SENSOR_FIRST_ID: 2001
       SENSOR_NUM: 1000
     depends_on:
-      - grafana-001
       - kafka-001
 
   app-004:
@@ -162,12 +142,12 @@ services:
       - cassandra_cluster
     environment:
       KAFKA_HOST: kafka-001:9092
-      CASSANDRA_HOST: "[cassandra-001,cassandra-004]"
+      CASSANDRA_HOST: cassandra-001,cassandra-002
       SENSOR_FIRST_ID: 3001
       SENSOR_NUM: 1000
     depends_on:
-      - grafana-001
       - kafka-001
+      - cassandra-setup
 
   app-005:
     container_name: app-005
@@ -178,9 +158,28 @@ services:
       - cassandra_cluster
     environment:
       KAFKA_HOST: kafka-001:9092
-      CASSANDRA_HOST: "[cassandra-001]"
+      CASSANDRA_HOST: cassandra-002,cassandra-003
       SENSOR_FIRST_ID: 4001
       SENSOR_NUM: 1000
     depends_on:
-      - grafana-001
       - kafka-001
+      - cassandra-setup
+
+  grafana-001:
+    image: grafana/grafana-oss:latest
+    container_name: grafana-001
+    hostname: grafana-001
+    ports:
+      - "3001:3000"
+    volumes:
+      - type: bind
+        source: ./grafana
+        target: /var/lib/grafana
+    networks:
+      - cassandra_cluster
+    depends_on:
+      - app-001
+      - app-002
+      - app-003
+      - app-004
+      - app-005
