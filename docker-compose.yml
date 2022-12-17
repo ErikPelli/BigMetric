@@ -112,12 +112,11 @@ services:
     networks:
       - kafka_cluster
       - cassandra_cluster
-    environment: &app_environment
-      TEMP_MIN_BOUND: 0
-      TEMP_MAX_BOUND: 100
-      RUN_CLIENT_RANDOM_DATA: true
-      KAFKA_HOST: kafka-001
-      CASSANDRA_HOST: "[cassandra-001,cassandra-002,cassandra-003,cassandra-004]"
+    environment:
+      KAFKA_HOST: kafka-001:9092
+      CASSANDRA_HOST: "[cassandra-001,cassandra-002]"
+      SENSOR_FIRST_ID: 1
+      SENSOR_NUM: 1000
     depends_on:
       - grafana-001
       - kafka-001
@@ -129,55 +128,59 @@ services:
     networks:
       - kafka_cluster
       - cassandra_cluster
-    environment: *app_environment
+    environment:
+      KAFKA_HOST: kafka-001:9092
+      CASSANDRA_HOST: "[cassandra-002,cassandra-003]"
+      SENSOR_FIRST_ID: 1001
+      SENSOR_NUM: 1000
     depends_on:
       - grafana-001
       - kafka-001
 
   app-003:
-    container_name: app-002
-    hostname: app-002
+    container_name: app-003
+    hostname: app-003
     build: .
     networks:
       - kafka_cluster
       - cassandra_cluster
-    environment: *app_environment
+    environment:
+      KAFKA_HOST: kafka-001:9092
+      CASSANDRA_HOST: "[cassandra-003,cassandra-004]"
+      SENSOR_FIRST_ID: 2001
+      SENSOR_NUM: 1000
     depends_on:
       - grafana-001
       - kafka-001
 
   app-004:
-    container_name: app-002
-    hostname: app-002
+    container_name: app-004
+    hostname: app-004
     build: .
     networks:
       - kafka_cluster
       - cassandra_cluster
-    environment: *app_environment
+    environment:
+      KAFKA_HOST: kafka-001:9092
+      CASSANDRA_HOST: "[cassandra-001,cassandra-004]"
+      SENSOR_FIRST_ID: 3001
+      SENSOR_NUM: 1000
     depends_on:
       - grafana-001
       - kafka-001
 
   app-005:
-    container_name: app-002
-    hostname: app-002
+    container_name: app-005
+    hostname: app-005
     build: .
     networks:
       - kafka_cluster
       - cassandra_cluster
-    environment: *app_environment
-    depends_on:
-      - grafana-001
-      - kafka-001
-
-  app-006:
-    container_name: app-002
-    hostname: app-002
-    build: .
-    networks:
-      - kafka_cluster
-      - cassandra_cluster
-    environment: *app_environment
+    environment:
+      KAFKA_HOST: kafka-001:9092
+      CASSANDRA_HOST: "[cassandra-001]"
+      SENSOR_FIRST_ID: 4001
+      SENSOR_NUM: 1000
     depends_on:
       - grafana-001
       - kafka-001
